@@ -1,0 +1,13 @@
+1. python3 -m venv venv
+2  source venv/bin/activate
+3. pip install -r requirements.txt
+Next Terminal
+1. redis-server
+Next Terminal
+1. mailhog
+Next Terminal
+1. python3 app.py
+Next Terminal
+1 celery -A app.celery worker -l info
+Next Terminal
+1 celery -A app.celery beat --max-interval 2 -l info

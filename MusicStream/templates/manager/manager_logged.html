@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>User Page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/styles2.css" rel="stylesheet">
+</head>
+<body>
+<nav>
+    <h1>Music World</h1>
+    <div class="navbar-nav">
+        {% if user %}
+        <span class="navbar-text">Logged in as: {{user["user_name"]}}</span>
+        <a href="/">Log Out</a>
+        {% endif %}
+    </div>
+</nav>
+
+<div class="container">
+    <h2>Welcome, {{user["user_name"]}}!</h2>
+</div>
+<div class="container">
+    <h1 class="my-4">Albums</h1>
+    {% if albums %}
+    <div class="row">
+        {% for album in albums %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ album.album_name }}</h5>
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h6 class="card-title">Songs</h6>
+                            {% if album.songs %}
+                            <ul class="list-group">
+                                {% for song in album.songs %}
+                                <li class="list-group-item">
+                                    <h5>Name : {{ song.song_name }}</h5>
+                                    <br>
+                                    by : {{ song.artist }}
+                                    <br>
+                                    <br>
+                                    <audio controls>
+                                        <source src="/play_audio/{{ song.song_id }}" type="audio/mp3">
+
+                                    </audio>
+                                    <br>
+                                    <br>
+                                    <h5>Lyrics</h5>
+                                    {{ song.lyrics }}
+                                </li>
+                                <div class="row mt-4">
+                                    <div class="col">
+                                        <a class="btn btn-primary" href="/update_song/{{ song.song_id }}">Update
+                                            Song</a>
+                                    </div>
+                                    <div class="col">
+                                        <form action="/delete_song/{{ song.song_id }}" method="POST">
+                                            <button class="btn btn-danger btn-sm" type="submit">Delete Song</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <br>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p>No songs for this Album.</p>
+                            {% endif %}
+                        </div>
+                        <div class="container">
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <a class="btn btn-primary btn-lg btn-block"
+                                       href="/add_song/{{ album.album_id }}">Add Song</a>
+                                    <br>
+                                </div>
+                                <div class="col">
+                                    <a class="btn btn-primary btn-block"
+                                       href="/update_album/{{ album.album_id }}">Update Album</a>
+                                </div>
+                                <div class="col">
+                                    <form action="/delete_album/{{album.album_id}}" method="POST">
+                                        <button class="btn btn-danger btn-sm" type="submit">Delete Album</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No items in the database.</p>
+    {% endif %}
+</div>
+<div class="d-flex justify-content-center">
+    <a class="btn btn-primary btn-lg" href="/add_album">Add Album</a>
+</div>
+
+</body>
+</html>
