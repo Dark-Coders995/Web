@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>User Page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/styles2.css" rel="stylesheet">
+</head>
+<body>
+
+<nav>
+    <h1>Music World</h1>
+    <div class="navbar-nav">
+        {% if user %}
+        <span class="navbar-text">Logged in as: {{user["user_name"]}}</span>
+        <a href="/logged_user">Home</a>
+        <a href="/creator_signup">Creator</a>
+        <a href="/">Log Out</a>
+        <a href="/playlist">My Playlist</a>
+        {% endif %}
+    </div>
+</nav>
+
+<div class="container">
+    <h2>Welcome, {{user["user_name"]}}!</h2>
+</div>
+<div class="container">
+    <h1 class="my-4">Albums</h1>
+    {% if albums %}
+    <div class="row">
+        {% for album in albums %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ album.album_name }}</h5>
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h6 class="card-title">Songs</h6>
+                            {% if album.songs %}
+                            <ul class="list-group">
+                                {% for song in album.songs %}
+                                <li class="list-group-item">
+                                    Name : {{ song.song_name }}
+                                    <br>
+                                    by : {{ song.artist }}
+                                    <br>
+                                    <br>
+                                    <audio controls>
+                                        <source src="/play_audio/{{ song.song_id }}" type="audio/mp3">
+                                    </audio>
+                                    <br>
+                                    <br>
+                                    <h5>Lyrics</h5>
+                                    {{ song.lyrics }}
+                                </li>
+                                <a class="btn btn-primary btn-lg" href="/add_to_playlist/{{song.song_id }}">Add To My playlist </a>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p>No songs for this item.</p>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No items in the database.</p>
+    {% endif %}
+</div>
+</body>
+</html>

@@ -1,0 +1,273 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: API Documentation
+
+paths:
+  /login/{username}/{password}:
+    get:
+      summary: Log in user
+      parameters:
+        - name: username
+          in: path
+          type: string
+          required: true
+          description: Username or email of the user.
+        - name: password
+          in: path
+          type: string
+          required: true
+          description: Password of the user.
+      responses:
+        200:
+          description: Successful login, returns a token.
+        404:
+          description: Incorrect password or user not found.
+
+  /manager/update_category/{category_id}:
+    put:
+      summary: Update a category
+      parameters:
+        - name: category_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the category to be updated.
+      responses:
+        200:
+          description: Category updated successfully.
+        404:
+          description: Category not found.
+
+  /manager/add_category:
+    post:
+      summary: Add a new category
+      parameters:
+        - name: category_name
+          in: formData
+          type: string
+          required: true
+          description: Name of the new category.
+      responses:
+        201:
+          description: Category added successfully.
+
+  /manager/delete_category/{category_id}:
+    delete:
+      summary: Delete a category
+      parameters:
+        - name: category_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the category to be deleted.
+      responses:
+        200:
+          description: Category deleted successfully.
+        404:
+          description: Category not found.
+
+  /manager/add_product/{category_id}:
+    post:
+      summary: Add a new product to a category
+      parameters:
+        - name: category_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the category to add the product to.
+        - name: product_name
+          in: formData
+          type: string
+          required: true
+          description: Name of the new product.
+        - name: quantity
+          in: formData
+          type: integer
+          required: true
+          description: Quantity of the product.
+        - name: rate
+          in: formData
+          type: integer
+          required: true
+          description: Rate of the product.
+        - name: unit
+          in: formData
+          type: string
+          required: true
+          description: Unit of measurement for the product.
+      responses:
+        201:
+          description: Product added successfully.
+
+  /manager/update_product/{product_id}:
+    put:
+      summary: Update a product
+      parameters:
+        - name: product_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the product to be updated.
+        - name: product_name
+          in: formData
+          type: string
+          required: true
+          description: New name for the product.
+        - name: quantity
+          in: formData
+          type: integer
+          required: true
+          description: New quantity for the product.
+        - name: rate
+          in: formData
+          type: integer
+          required: true
+          description: New rate for the product.
+        - name: unit
+          in: formData
+          type: string
+          required: true
+          description: New unit of measurement for the product.
+      responses:
+        200:
+          description: Product updated successfully.
+        404:
+          description: Product not found.
+
+  /manager/delete_product/{product_id}:
+    delete:
+      summary: Delete a product
+      parameters:
+        - name: product_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the product to be deleted.
+      responses:
+        200:
+          description: Product deleted successfully.
+        404:
+          description: Product not found.
+
+  /user/sign_up:
+    post:
+      summary: Sign up a new user
+      parameters:
+        - name: user_name
+          in: formData
+          type: string
+          required: true
+          description: Username for the new user.
+        - name: email
+          in: formData
+          type: string
+          required: true
+          description: Email address for the new user.
+        - name: password
+          in: formData
+          type: string
+          required: true
+          description: Password for the new user.
+      responses:
+        201:
+          description: User signed up successfully.
+        650:
+          description: Username is required.
+        651:
+          description: Email is required.
+        652:
+          description: Password is required.
+        653:
+          description: Username already exists.
+        654:
+          description: Invalid email.
+        655:
+          description: Email already in use.
+
+  /category:
+    get:
+      summary: Get all categories
+      responses:
+        200:
+          description: List of all categories.
+        404:
+          description: Category not found.
+
+  /cart:
+    get:
+      summary: Get user's cart items
+      responses:
+        200:
+          description: List of cart items.
+
+  /buy/{product_id}:
+    get:
+      summary: Get product details
+      parameters:
+        - name: product_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the product to be retrieved.
+      responses:
+        200:
+          description: Product details.
+
+    post:
+      summary: Buy a product
+      parameters:
+        - name: product_id
+          in: path
+          type: integer
+          required: true
+          description: ID of the product to be bought.
+        - name: buy_quantity
+          in: formData
+          type: integer
+          required: true
+          description: Quantity of the product to be bought.
+      responses:
+        200:
+          description: Product bought successfully.
+        404:
+          description: Out of Stock.
+
+definitions:
+  Product:
+    type: object
+    properties:
+      product_id:
+        type: integer
+      product_name:
+        type: string
+      quantity:
+        type: integer
+      rate:
+        type: integer
+      unit:
+        type: string
+
+  Category:
+    type: object
+    properties:
+      category_id:
+        type: integer
+      category_name:
+        type: string
+      products:
+        type: array
+        items:
+          $ref: '#/definitions/Product'
+
+  User:
+    type: object
+    properties:
+      user_id:
+        type: integer
+      user_name:
+        type: string
+      email:
+        type: string
+      is_active:
+        type: boolean

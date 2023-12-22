@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>User Page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/styles2.css" rel="stylesheet">
+    <style>
+        th {
+            text-align: center;
+            padding: 15px;
+        }
+
+        p {
+            padding: 15px;
+        }
+
+        td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <h1>Grocery Store</h1>
+    <div class="navbar-nav">
+        {% if user %}
+        <span class="navbar-text">Logged in as: {{user["user_name"]}}</span>
+        <a href="/logged_user">Home</a>
+        <a href="/">Log Out</a>
+        <a href="/cart">Cart</a>
+        {% endif %}
+    </div>
+</nav>
+
+<h1 style="padding: 10px">Welcome, {{ user.user_name }}!</h1>
+<h2 style="padding: 10px">Your Cart:</h2>
+<table>
+    <tr>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+        <th>Total Price</th>
+        <th>Actions</th>
+        <th>Availability</th>
+    </tr>
+    {% for cart_item in cart_items %}
+    <tr>
+        <td>{{ cart_item.product.product_name }}</td>
+        <td>
+            <input name="cart_item_id" type="hidden" value="{{ cart_item.cart_id }}">
+            {{cart_item.quantity}}
+            <br>
+            {% if cart_item.quantity < cart_item.product.quantity %}
+            <a href="/update_cart/{{cart_item.product_id }}">Update </a>
+            {% else %}
+            <p> OUT OF STOCK </p>
+            {% endif %}
+        </td>
+        <td>{{ cart_item.product.rate }}</td>
+        <td>{{ cart_item.total_price }}</td>
+        <td>
+            <form action="/cart" method="post">
+                <input name="cart_item_id" type="hidden" value="{{ cart_item.cart_id }}">
+                <input name="user_id" type="hidden" value="{{ cart_item.user.id }}">
+                <input name="product_id" type="hidden" value={{cart_item.product_id}}">
+                <input name="action" type="hidden" value="remove">
+                <button type="submit">Remove</button>
+            </form>
+        </td>
+        <td>
+            {{ cart_item.product.quantity}}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+<p> Total Price: {{ total_price }}</p>
+</body>
+</html>

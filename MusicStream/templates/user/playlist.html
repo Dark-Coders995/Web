@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>User Page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/styles2.css" rel="stylesheet">
+    <style>
+        th {
+            text-align: center;
+            padding: 15px;
+        }
+
+        p {
+            padding: 15px;
+        }
+
+        td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <h1>Music World</h1>
+    <div class="navbar-nav">
+        {% if user %}
+        <span class="navbar-text">Logged in as: {{user["user_name"]}}</span>
+        <a href="/logged_user">Home</a>
+        <a href="/">Log Out</a>
+        <a href="/playlist">Cart</a>
+        {% endif %}
+    </div>
+</nav>
+
+<h1 style="padding: 10px">Welcome, {{ user.user_name }}!</h1>
+<h2 style="padding: 10px">Your Playlist:</h2>
+<table>
+    <tr>
+        <th>Song Name</th>
+        <th>Artist </th>
+        <th>Lyrics </th>
+        <th>Song</th>
+        <th> Action</th>
+    </tr>
+    {% for playlist_item in playlist_items %}
+    <tr>
+        <td>{{ playlist_item.songs.song_name }}</td>
+        <td>{{ playlist_item.songs.artist }}</td>
+        <td>{{ playlist_item.songs.lyrics }}</td>
+        <td>
+                <audio controls>
+                    <source src="/play_audio/{{ playlist_item.songs.song_id }}" type="audio/mp3">
+                </audio>
+        </td>
+        <td>
+            <form action="/playlist" method="post">
+                <input name="playlist_item_id" type="hidden" value="{{ playlist_item.playlist_id}}">
+                <input name="user_id" type="hidden" value="{{ playlist_item.user.id }}">
+                <input name="product_id" type="hidden" value={{ playlist_item.song_id}}">
+                <input name="action" type="hidden" value="remove">
+                <button type="submit">Remove</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>
