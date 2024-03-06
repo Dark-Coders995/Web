@@ -59,7 +59,7 @@
    ```
 4. Start Celery beat.
    ```bash
-   python3 -m python3 -m celery -A app.celery beat -l info
+   python3 -m celery -A app.celery beat -l info
    ```
 
 ### Terminal 5
